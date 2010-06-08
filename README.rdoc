@@ -1,0 +1,76 @@
+= Tripwire::Notifier
+
+Stop hurting your users!
+
+Tripwire captures validation errors from your Ruby on Rails application to help you identify and fix user experience issues. The Tripwire::Notifier gem makes it easy to hook up your app to the Tripwire web service.
+
+If you haven't already signed up for a Tripwire account and set up your project, visit http://tripwireapp.com to do so now.
+
+
+= Basic Usage
+
+* Install the gem:
+
+    gem install tripwire_notifier
+
+* Modify your config/environment.rb file to make your app aware of the tripwire_notifier gem by adding the following line to config/environment.rb:
+
+    config.gem 'tripwire_notifier'
+
+* (Optionally) unpack the gem into your Rails app:
+
+    rake gems:unpack
+
+* In your Rails app, create config/initializers/tripwire_notifier.rb and add the following line with the API key for your Tripwire project:
+
+    Tripwire::Notifier.api_key = "<YOUR API KEY>"
+
+Your validation failures will now be tracked on your create and update actions in production mode. Feel free to start script/server in production mode and trigger some of your own.
+
+
+= More Advanced Usage
+
+=== Tracking custom actions
+
+Tripwire::Notifier assumes your app is RESTful, so it only monitors the create and update actions by default. If you're creating or updating records in non-RESTful actions, you can use an after_filter to make sure any validation failures in those actions are caught as well:
+
+    after_filter :log_validation_failures_to_tripwire, :only => [:create, :update, :my_custom_action]
+
+=== Filtering params
+
+Tripwire::Notifier tracks the parameters submitted in actions that cause validation errors. Because your app may handle sensitive data, like passwords, credit card numbers, and nuclear launch codes, Tripwire::Notifier respects the built-in Rails parameter filtering that you enable with filter_parameter_logging in your ApplicationController. For example:
+
+    # Scrub sensitive parameters from your log
+    filter_parameter_logging :password, :secret
+
+Per the Rails standard, those params will show up as "[FILTERED]" in the data submitted to Tripwire.
+
+=== Running in other environments
+
+Tripwire::Notifier is only enabled in the production environment by default.  If you want to enable it in additional environments, such as staging, you'll need to add the following line to your initializer file:
+
+    Tripwire::Notifier.monitored_environments << 'staging'
+
+
+We plan to streamline the setup process in the future and provide additional detailed configuration options and documentation. Please feel free to contact us with feedback, questions, or suggestions about this process. Thanks!
+
+== Contact information
+
+* Twitter: @tripwireapp
+* Email: jeremy@tripwireapp.com, jeff@tripwireapp.com
+
+
+== Note on Patches/Pull Requests
+ 
+* Fork the project.
+* Make your feature addition or bug fix.
+* Add tests for it. This is important so I don't break it in a
+  future version unintentionally.
+* Commit, do not mess with rakefile, version, or history.
+  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
+* Send me a pull request. Bonus points for topic branches.
+
+== Copyright
+
+Copyright (c) 2010 Jeffrey Chupp and Jeremy Weiskotten. See LICENSE for details.
+

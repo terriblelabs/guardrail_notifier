@@ -5,10 +5,10 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "tripwire_notifier"
-    gem.summary = %Q{Captures validation errors from your models and submit them to tripwireapp.com}
-    gem.description = %Q{Captures validation errors from your models and submit them to tripwireapp.com}
+    gem.summary = %Q{Tripwire (http://tripwireapp.com) captures validation errors from your Ruby on Rails application.}
+    gem.description = %Q{Tripwire captures validation errors from your Ruby on Rails application to help you identify and fix user experience issues. The Tripwire::Notifier gem makes it easy to hook up your app to the Tripwire web service.}
     gem.email = ""
-    gem.homepage = "http://github.com/jeremyw/tripwire"
+    gem.homepage = "http://github.com/jeremyw/tripwire_notifier"
     gem.authors = ["Jeffrey Chupp", "Jeremy Weiskotten"]
     gem.add_development_dependency "shoulda", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings

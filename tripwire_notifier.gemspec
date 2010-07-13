@@ -9,33 +9,33 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeffrey Chupp", "Jeremy Weiskotten"]
-  s.date = %q{2010-07-11}
+  s.date = %q{2010-07-12}
   s.description = %q{Tripwire captures validation errors from your Ruby on Rails application to help you identify and fix user experience issues. The Tripwire::Notifier gem makes it easy to hook up your app to the Tripwire web service.}
   s.email = %q{}
   s.extra_rdoc_files = [
     "LICENSE",
-    "README.rdoc"
+     "README.rdoc"
   ]
   s.files = [
     ".document",
-    ".gitignore",
-    "LICENSE",
-    "README.rdoc",
-    "Rakefile",
-    "VERSION",
-    "lib/tripwire_notifier.rb",
-    "test/helper.rb",
-    "test/test_tripwire.rb",
-    "tripwire_notifier.gemspec"
+     ".gitignore",
+     "LICENSE",
+     "README.rdoc",
+     "Rakefile",
+     "VERSION",
+     "lib/tripwire_notifier.rb",
+     "test/helper.rb",
+     "test/test_tripwire.rb",
+     "tripwire_notifier.gemspec"
   ]
-  s.homepage = %q{http://github.com/jeremyw/tripwire}
+  s.homepage = %q{http://github.com/jeremyw/tripwire_notifier}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
-  s.summary = %q{Tripwire captures validation errors from your Ruby on Rails application to help you identify and fix user experience issues. The Tripwire::Notifier gem makes it easy to hook up your app to the Tripwire web service.}
+  s.summary = %q{Tripwire (http://tripwireapp.com) captures validation errors from your Ruby on Rails application.}
   s.test_files = [
     "test/helper.rb",
-    "test/test_tripwire.rb"
+     "test/test_tripwire.rb"
   ]
 
   if s.respond_to? :specification_version then

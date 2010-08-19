@@ -82,7 +82,9 @@ module TripwireNotifier
           # TODO: limit this in size - how big?
           data[:params] = filtered_params # TODO: controller and action are redundant
 
-          data[:current_user] = current_user.id if respond_to?(:current_user)
+          if respond_to?(:current_user) && !current_user.nil?
+            data[:current_user] = current_user.id
+          end
 
           data[:user_agent] = request.user_agent
           data[:cookies] = request.cookies

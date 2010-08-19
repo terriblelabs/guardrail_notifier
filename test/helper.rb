@@ -18,9 +18,16 @@ class FooController < ActionController::Base
   filter_parameter_logging :password
 end
 
+class User
+  attr_accessor :id
+  def initialize
+    @id = 53077
+  end
+end
+
 class BarController < ActionController::Base
   def current_user
-    "joe"
+    User.new
   end
 end
 

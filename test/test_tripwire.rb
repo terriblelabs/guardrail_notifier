@@ -17,9 +17,12 @@ class TestTripwire < Test::Unit::TestCase
 
     @foo_controller = fake_controller(FooController)
 
-    FakeWeb.register_uri(:post, Tripwire::Notifier::API_URL, :body => "")
-    Tripwire::Notifier.api_key = "SOME API KEY"
-    Tripwire::Notifier.monitored_environments = ['production']
+    FakeWeb.register_uri(:post, TripwireNotifier::API_URL, :body => "")
+
+    TripwireNotifier.configure do |config|
+      config.api_key = "SOME API KEY"
+      config.monitored_environments = ['production']
+    end
 
     @model_one   = OpenStruct.new(:errors => {"bar" => "is blank"})
     @model_two   = OpenStruct.new(:errors => {"baz" => "is blank"})
@@ -33,27 +36,26 @@ class TestTripwire < Test::Unit::TestCase
   end
 
   should "set an api key" do
-    Tripwire::Notifier.api_key = "Foo"
-
-    assert_equal "Foo", Tripwire::Notifier.api_key
+    TripwireNotifier.configure { |c| c.api_key = "Foo" }
+    assert_equal "Foo", TripwireNotifier.configuration.api_key
   end
 
   should "set a timeout_in_seconds" do
-    assert_equal 5, Tripwire::Notifier.timeout_in_seconds
-    Tripwire::Notifier.timeout_in_seconds = 6
-    assert_equal 6, Tripwire::Notifier.timeout_in_seconds
+    assert_equal 5, TripwireNotifier.configuration.timeout_in_seconds
+    TripwireNotifier.configure { |c| c.timeout_in_seconds = 6 }
+    assert_equal 6, TripwireNotifier.configuration.timeout_in_seconds
   end
 
   should "set monitored environments" do
-    assert_equal ["production"], Tripwire::Notifier.monitored_environments
-    Tripwire::Notifier.monitored_environments = ['stage', 'development']
-    assert_equal ['stage', 'development'], Tripwire::Notifier.monitored_environments
+    assert_equal ["production"], TripwireNotifier.configuration.monitored_environments
+    TripwireNotifier.configure { |c| c.monitored_environments = ['stage', 'development'] }
+    assert_equal ['stage', 'development'], TripwireNotifier.configuration.monitored_environments
   end
 
   should "respect monitored environments" do
     assert @foo_controller.send(:should_log_failures_to_tripwire?)
 
-    Tripwire::Notifier.monitored_environments = ['stage', 'development']
+    TripwireNotifier.configuration.monitored_environments = ['stage', 'development']
     assert !@foo_controller.send(:should_log_failures_to_tripwire?)
   end
 
@@ -77,12 +79,12 @@ class TestTripwire < Test::Unit::TestCase
     params = @foo_controller.send(:tripwire_params)
     failures = JSON.parse(params[:failures])
     assert_same_elements expected, failures
-    assert_same_elements Tripwire::Notifier::API_VERSION, params[:api_version]
+    assert_same_elements TripwireNotifier::API_VERSION, params[:api_version]
     assert_same_elements "SOME API KEY", params[:api_key]
   end
 
   should "submit errors via log_validation_failures_to_tripwire" do
-    Net::HTTP.expects(:post_form).with(URI.parse(Tripwire::Notifier::API_URL), @foo_controller.send(:tripwire_params))
+    Net::HTTP.expects(:post_form).with(URI.parse(TripwireNotifier::API_URL), @foo_controller.send(:tripwire_params))
     @foo_controller.send(:log_validation_failures_to_tripwire)
   end
 
@@ -101,9 +103,9 @@ class TestTripwire < Test::Unit::TestCase
     assert_equal @foo_controller.params.merge('password' => "[FILTERED]", 'password_confirmation' => '[FILTERED]'), JSON.parse(@foo_controller.send(:tripwire_params)[:data])['params']
   end
 
-  should "log current user if the method is exposed" do
+  should "log current user's id if the method is exposed" do
     assert_equal nil, JSON.parse(@foo_controller.send(:tripwire_params)[:data])['current_user']
-    assert_equal "joe", JSON.parse(fake_controller(BarController).send(:tripwire_params)[:data])['current_user']
+    assert_equal 53077, JSON.parse(fake_controller(BarController).send(:tripwire_params)[:data])['current_user']
   end
 
   [:cookies, :session, :user_agent].each do |kind|

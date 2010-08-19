@@ -1,12 +1,13 @@
 require 'rubygems'
 require 'rake'
+require File.dirname(__FILE__) + "/lib/tripwire_notifier/version.rb"
 
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "tripwire_notifier"
     gem.summary = %Q{Tripwire (http://tripwireapp.com) captures validation errors from your Ruby on Rails application.}
-    gem.description = %Q{Tripwire captures validation errors from your Ruby on Rails application to help you identify and fix user experience issues. The Tripwire::Notifier gem makes it easy to hook up your app to the Tripwire web service.}
+    gem.description = %Q{Tripwire captures validation errors from your Ruby on Rails application to help you identify and fix user experience issues. The TripwireNotifier gem makes it easy to hook up your app to the Tripwire web service.}
     gem.email = ""
     gem.homepage = "http://github.com/jeremyw/tripwire_notifier"
     gem.authors = ["Jeffrey Chupp", "Jeremy Weiskotten"]
@@ -44,7 +45,7 @@ task :default => :test
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
-  version = File.exist?('VERSION') ? File.read('VERSION') : ""
+  version = TripwireNotifier::VERSION #File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title = "tripwire_notifier #{version}"

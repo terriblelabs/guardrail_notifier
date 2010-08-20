@@ -19,7 +19,7 @@ module TripwireNotifier
               )
             end
           rescue Exception => ex
-            error "Could not submit tripwireapp notification: #{ex.class} - #{ex.message}"
+            warn "Could not submit tripwireapp notification: #{ex.class} - #{ex.message}"
           end
         end
       end

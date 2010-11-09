@@ -9,7 +9,7 @@ begin
     gem.name = "tripwire_notifier"
     gem.summary = %Q{Tripwire (http://tripwireapp.com) captures validation errors from your Ruby on Rails application.}
     gem.description = %Q{Tripwire captures validation errors from your Ruby on Rails application to help you identify and fix user experience issues. The TripwireNotifier gem makes it easy to hook up your app to the Tripwire web service.}
-    gem.email = ""
+    gem.email = "support@tripwireapp.com"
     gem.homepage = "http://github.com/jeremyw/tripwire_notifier"
     gem.authors = ["Jeffrey Chupp", "Jeremy Weiskotten"]
     gem.add_development_dependency "shoulda", ">= 0"
@@ -23,7 +23,7 @@ end
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/test_*.rb'
+  test.pattern = 'test/**/*_test.rb'
   test.verbose = true
 end
 
@@ -31,7 +31,7 @@ begin
   require 'rcov/rcovtask'
   Rcov::RcovTask.new do |test|
     test.libs << 'test'
-    test.pattern = 'test/**/test_*.rb'
+    test.pattern = 'test/**/*_test.rb'
     test.verbose = true
   end
 rescue LoadError

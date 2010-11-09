@@ -11,16 +11,7 @@ module TripwireNotifier
 
       def log_validation_failures_to_tripwire
         if should_log_failures_to_tripwire? && records_with_errors.present?
-          begin
-            timeout(TripwireNotifier.configuration.timeout_in_seconds) do
-              Net::HTTP.post_form(
-                URI.parse(TripwireNotifier::API_URL),
-                tripwire_params
-              )
-            end
-          rescue Exception => ex
-            warn "Could not submit tripwireapp notification: #{ex.class} - #{ex.message}"
-          end
+          TripwireNotifier.notify(tripwire_params)
         end
       end
 
@@ -47,13 +38,10 @@ module TripwireNotifier
 
       def tripwire_params
         {}.tap do |query|
-          query[:notifier_version] = TripwireNotifier.configuration.notifier_version
-          query[:api_key]          = TripwireNotifier.configuration.api_key
-          query[:api_version]      = TripwireNotifier::API_VERSION
-          query[:_controller]      = params['controller']
-          query[:_action]          = params['action']
-          query[:path]             = request.path
-          query[:data]             = request_data.to_json
+          query[:_controller]  = params['controller']
+          query[:_action]      = params['action']
+          query[:path]         = request.path
+          query[:data]         = request_data.to_json
 
           query[:failures] = records_with_errors.map do |record|
             error_hashes(record)

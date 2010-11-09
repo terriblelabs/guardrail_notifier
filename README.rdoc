@@ -4,33 +4,42 @@ Stop hurting your users!
 
 Tripwire captures validation errors from your Ruby on Rails application to help you identify and fix user experience issues. The TripwireNotifier gem makes it easy to hook up your app to the Tripwire web service.
 
-If you haven't already signed up for a Tripwire account and set up your project, visit http://tripwireapp.com to do so now.
+If you haven't already signed up for a Tripwire account, visit http://tripwireapp.com.
 
 
-= Basic Usage
+= Installation
+
+=== Rails 3
+
+* Add the following line to Gemfile:
+
+    gem 'tripwire_notifier'
 
 * Install the gem:
 
-    gem install tripwire_notifier
+    bundle install
 
-* Modify your config/environment.rb file to make your app aware of the tripwire_notifier gem by adding the following line to config/environment.rb:
+=== Rails 2.3
+
+* Add the following line to config/environment.rb:
 
     config.gem 'tripwire_notifier'
 
-* (Optionally) unpack the gem into your Rails app:
+* Install the gem:
 
-    rake gems:unpack
+    [sudo] rake gems:install GEM=tripwire_notifier
 
-* In your Rails app, create config/initializers/tripwire_notifier.rb and add the following line with the API key for your Tripwire project:
+= Configuration
+
+In your Rails app, create config/initializers/tripwire_notifier.rb and add the following line with the API key for your Tripwire project:
 
     TripwireNotifier.configure do |config|
       config.api_key = "<YOUR API KEY>"
     end
 
-Your validation failures will now be tracked on your create and update actions in production mode. Feel free to start script/server in production mode and trigger some of your own.
+Validation errors will now be submitted to the Tripwire service on your create and update actions in production mode.
 
-
-= More Advanced Usage
+= Advanced Usage
 
 === Tracking custom actions
 
@@ -38,23 +47,27 @@ TripwireNotifier assumes your app is RESTful, so it only monitors the create and
 
     after_filter :log_validation_failures_to_tripwire, :only => [:create, :update, :my_custom_action]
 
-=== Filtering params
-
-TripwireNotifier tracks the parameters submitted in actions that cause validation errors. Because your app may handle sensitive data, like passwords, credit card numbers, and nuclear launch codes, TripwireNotifier respects the built-in Rails parameter filtering that you enable with filter_parameter_logging in your ApplicationController. For example:
-
-    # Scrub sensitive parameters from your log
-    filter_parameter_logging :password, :secret
-
-Per the Rails standard, those params will show up as "[FILTERED]" in the data submitted to Tripwire.
-
 === Running in other environments
 
 TripwireNotifier is only enabled in the production environment by default. If you want to enable it in additional environments, such as staging, you'll need to add the following line to your Tripwire initializer:
 
-    config.monitored_environments << 'staging'
+config.monitored_environments << 'staging'
 
+=== SSL
 
-We plan to streamline the setup process in the future and provide additional detailed configuration options and documentation. Please feel free to contact us with feedback, questions, or suggestions about this process. Thanks!
+TripwireNotifier does not use SSL by default, but you can enable it easily:
+
+    config.secure = true
+
+=== Filtering params
+
+TripwireNotifier records the parameters submitted in actions that cause validation errors. Because your app may handle sensitive data, like passwords, credit card numbers, and nuclear launch codes, TripwireNotifier respects the built-in Rails parameter filtering that you enable with filter_parameter_logging in your ApplicationController. For example:
+
+    # Scrub sensitive parameters from your log
+    filter_parameter_logging :password, :secret
+
+Per Rails convention, those params will show up as "[FILTERED]" in the data submitted to Tripwire.
+
 
 == Contact information
 
@@ -68,7 +81,7 @@ We plan to streamline the setup process in the future and provide additional det
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
   future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
+* Commit, do not mess with Rakefile, version, or history.
   (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 

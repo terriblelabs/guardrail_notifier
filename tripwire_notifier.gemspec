@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeffrey Chupp", "Jeremy Weiskotten"]
-  s.date = %q{2010-11-09}
+  s.date = %q{2010-11-12}
   s.description = %q{Tripwire captures validation errors from your Ruby on Rails application to help you identify and fix user experience issues. The TripwireNotifier gem makes it easy to hook up your app to the Tripwire web service.}
   s.email = %q{support@tripwireapp.com}
   s.extra_rdoc_files = [

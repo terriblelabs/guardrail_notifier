@@ -13,6 +13,11 @@ module TripwireNotifier
         if should_log_failures_to_tripwire? && records_with_errors.present?
           TripwireNotifier.notify(tripwire_params)
         end
+      rescue Exception => e
+        ::Rails.logger.error("Failed to log validation failure to Tripwire")
+
+        handler = TripwireNotifier.configuration.on_exception
+        handler.call(e) if !handler.nil? && handler.respond_to?(:call)
       end
 
       def should_log_failures_to_tripwire?

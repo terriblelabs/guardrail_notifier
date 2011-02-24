@@ -111,6 +111,25 @@ class TestTripwire < Test::Unit::TestCase
     assert_equal 53077, JSON.parse(fake_controller(BarController).send(:tripwire_params)[:data])['current_user']
   end
 
+  should "handle exceptions" do
+    logger = mock()
+    logger.expects(:error)
+    Rails.stubs(:logger => logger)
+
+    @foo_controller.stubs(:tripwire_params).raises(StandardError)
+    @foo_controller.send(:log_validation_failures_to_tripwire)
+
+    # with a custom exception handler
+    list = []
+    TripwireNotifier.configure { |c| c.on_exception = proc { |e| list << e } }
+
+    logger.expects(:error)
+    @foo_controller.send(:log_validation_failures_to_tripwire)
+
+    assert_equal 1, list.size
+    assert_kind_of StandardError, list.first
+  end
+
   [:cookies, :session, :user_agent].each do |kind|
     should "log #{kind}" do
       assert @foo_controller.request.send(kind).present?

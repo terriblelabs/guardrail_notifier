@@ -86,7 +86,7 @@ module TripwireNotifier
       end
 
       def filtered_params
-        if respond_to?(:filter_parameters)
+        p = if respond_to?(:filter_parameters)
           # pre-Rails 3
           filter_parameters(params)
         elsif request.respond_to?(:filtered_parameters)
@@ -94,6 +94,18 @@ module TripwireNotifier
           request.filtered_parameters
         else
           params
+        end
+        filter_files_from_params(p)
+      end
+
+      def filter_files_from_params(params)
+        params.inject({}) do |acc, (k, v)|
+          acc[k] = if v.is_a?(Hash)
+            filter_files_from_params(v)
+          else
+            v.is_a?(Tempfile) ? '[REMOVED: Tempfile]' : v
+          end
+          acc
         end
       end
     end

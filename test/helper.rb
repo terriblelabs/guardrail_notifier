@@ -6,6 +6,7 @@ require 'shoulda'
 require 'action_controller'
 require 'fakeweb'
 require 'mocha'
+require 'tempfile'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))

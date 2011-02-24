@@ -99,13 +99,12 @@ module TripwireNotifier
       end
 
       def filter_files_from_params(params)
-        params.inject({}) do |acc, (k, v)|
-          acc[k] = if v.is_a?(Hash)
+        params.each do |k,v|
+          if v.is_a?(Hash)
             filter_files_from_params(v)
-          else
-            v.is_a?(Tempfile) ? '[REMOVED: Tempfile]' : v
+          elsif v.is_a?(Tempfile)
+            params[k] = '[FILTERED]'
           end
-          acc
         end
       end
     end

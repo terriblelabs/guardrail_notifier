@@ -106,6 +106,17 @@ class TestTripwire < Test::Unit::TestCase
     assert_equal @foo_controller.params.merge('password' => "[FILTERED]", 'password_confirmation' => '[FILTERED]'), JSON.parse(@foo_controller.send(:tripwire_params)[:data])['params']
   end
 
+  should "filter tempfiles" do
+    Tempfile.open('foo') do |tempfile|
+      tempfile.write('test data')
+      tempfile.rewind
+
+      @foo_controller.params.merge!('value' => 'abc', 'photo' => tempfile, 'nested' => { 'nested_value' => 1, 'nested_photo' => tempfile })
+      params = JSON.parse(@foo_controller.send(:tripwire_params)[:data])['params']
+      assert_equal @foo_controller.params.merge('value' => 'abc', 'photo' => '[FILTERED]', 'nested' => { 'nested_value' => 1, 'nested_photo' => '[FILTERED]' }), params
+    end
+  end
+
   should "log current user's id if the method is exposed" do
     assert_equal nil, JSON.parse(@foo_controller.send(:tripwire_params)[:data])['current_user']
     assert_equal 53077, JSON.parse(fake_controller(BarController).send(:tripwire_params)[:data])['current_user']

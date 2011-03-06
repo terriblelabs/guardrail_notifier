@@ -40,6 +40,12 @@ class TestTripwire < Test::Unit::TestCase
     assert_equal "Foo", TripwireNotifier.configuration.api_key
   end
 
+  should "fallback to the ENV api key" do
+    TripwireNotifier.configure { |c| c.api_key = nil }
+    ENV['TRIPWIRE_API_KEY'] = 'Cupcakes'
+    assert_equal "Cupcakes", TripwireNotifier.notifier_params[:api_key]
+  end
+
   should "set secure" do
     TripwireNotifier.configure { |c| c.secure = true }
     assert TripwireNotifier.configuration.secure?

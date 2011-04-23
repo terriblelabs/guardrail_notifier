@@ -27,11 +27,11 @@ module TripwireNotifier
     end
 
     def notifier_params
-      {}.tap do |params|
-        params[:notifier_version] = self.configuration.notifier_version
-        params[:api_key]          = self.configuration.api_key || ENV['TRIPWIRE_API_KEY']
-        params[:api_version]      = API_VERSION
-      end
+      @notifier_params ||= {
+        :notifier_version => self.configuration.notifier_version,
+        :api_key          => self.configuration.api_key || ENV['TRIPWIRE_API_KEY'],
+        :api_version      => API_VERSION
+      }
     end
   end
 end

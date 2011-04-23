@@ -26,7 +26,7 @@ module TripwireNotifier
       @notifier_version = VERSION
       @timeout_in_seconds = 5
       @monitored_environments = ['production']
-      @secure = false
+      @secure = true
       @on_exception = nil
     end
   end

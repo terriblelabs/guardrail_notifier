@@ -51,20 +51,23 @@ TripwireNotifier assumes your app is RESTful, so it only monitors the create and
 
 TripwireNotifier is only enabled in the production environment by default. If you want to enable it in additional environments, such as staging, you'll need to add the following line to your Tripwire initializer:
 
-config.monitored_environments << 'staging'
+    TripwireNotifier.configure do |config|
+      config.monitored_environments << 'staging'
+    end
 
 === SSL
 
-TripwireNotifier does not use SSL by default, but you can enable it easily:
+TripwireNotifier uses a secure connection over SSL by default, but you can easily disable it if you prefer:
 
-    config.secure = true
+    TripwireNotifier.configure do |config|
+      config.secure = false
+    end
 
 === Filtering params
 
-TripwireNotifier records the parameters submitted in actions that cause validation errors. Because your app may handle sensitive data, like passwords, credit card numbers, and nuclear launch codes, TripwireNotifier respects the built-in Rails parameter filtering that you enable with filter_parameter_logging in your ApplicationController. For example:
+TripwireNotifier records the parameters submitted in actions that cause validation errors. Because your app may handle sensitive data, like passwords, credit card numbers, and nuclear launch codes, TripwireNotifier respects the parameter filtering that you configure in Rails in config/application.rb (Rails 3) or ApplicationController (Rails 2.3). For example in Rails 3:
 
-    # Scrub sensitive parameters from your log
-    filter_parameter_logging :password, :secret
+    config.filter_parameters += [:password, :secret, :cvv]
 
 Per Rails convention, those params will show up as "[FILTERED]" in the data submitted to Tripwire.
 

@@ -13,8 +13,11 @@ module TripwireNotifier
     attr_accessor :configuration
     attr_accessor :sender
 
+    def configuration
+      @configuration ||= Configuration.new
+    end
+
     def configure
-      self.configuration ||= Configuration.new
       yield(self.configuration)
       self.sender = Sender.new(self.configuration)
     end

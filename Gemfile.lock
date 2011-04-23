@@ -1,0 +1,24 @@
+PATH
+  remote: .
+  specs:
+    tripwire_notifier (0.2.6)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    fakeweb (1.3.0)
+    mocha (0.9.12)
+    rake (0.8.7)
+    redgreen (1.2.2)
+    shoulda (2.11.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  fakeweb
+  mocha
+  rake (>= 0.8.7)
+  redgreen
+  shoulda
+  tripwire_notifier!

@@ -1,5 +1,7 @@
 = TripwireNotifier
 
+http://travis-ci.org/jeremyw/tripwire_notifier.png
+
 Stop hurting your users!
 
 Tripwire captures validation errors from your Ruby on Rails application to help you identify and fix user experience issues. The TripwireNotifier gem makes it easy to hook up your app to the Tripwire web service.

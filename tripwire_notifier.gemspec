@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeffrey Chupp", "Jeremy Weiskotten"]
-  s.date = %q{2011-04-23}
+  s.date = %q{2011-05-10}
   s.description = %q{Tripwire captures validation errors from your Ruby on Rails application to help you identify and fix user experience issues. The TripwireNotifier gem makes it easy to hook up your app to the Tripwire web service.}
   s.email = %q{support@tripwireapp.com}
   s.extra_rdoc_files = [
@@ -37,19 +37,12 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Tripwire (http://tripwireapp.com) captures validation errors from your Ruby on Rails application.}
-  s.test_files = [
-    "test/helper.rb",
-    "test/sender_test.rb",
-    "test/tripwire_test.rb"
-  ]
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<tripwire_notifier>, [">= 0"])
-      s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<fakeweb>, [">= 0"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<mocha>, [">= 0"])
@@ -57,8 +50,6 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rake>, [">= 0.8.7"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
     else
-      s.add_dependency(%q<tripwire_notifier>, [">= 0"])
-      s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<fakeweb>, [">= 0"])
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<mocha>, [">= 0"])
@@ -67,8 +58,6 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<shoulda>, [">= 0"])
     end
   else
-    s.add_dependency(%q<tripwire_notifier>, [">= 0"])
-    s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<fakeweb>, [">= 0"])
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<mocha>, [">= 0"])

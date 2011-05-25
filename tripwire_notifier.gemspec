@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{tripwire_notifier}
-  s.version = "0.2.8"
+  s.version = "0.2.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeffrey Chupp", "Jeremy Weiskotten"]
-  s.date = %q{2011-05-10}
+  s.date = %q{2011-05-24}
   s.description = %q{Tripwire captures validation errors from your Ruby on Rails application to help you identify and fix user experience issues. The TripwireNotifier gem makes it easy to hook up your app to the Tripwire web service.}
   s.email = %q{support@tripwireapp.com}
   s.extra_rdoc_files = [
@@ -43,6 +43,8 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_development_dependency(%q<actionpack>, ["= 2.3.11"])
+      s.add_development_dependency(%q<json>, [">= 0"])
       s.add_development_dependency(%q<fakeweb>, [">= 0"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<mocha>, [">= 0"])
@@ -50,6 +52,8 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rake>, [">= 0.8.7"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
     else
+      s.add_dependency(%q<actionpack>, ["= 2.3.11"])
+      s.add_dependency(%q<json>, [">= 0"])
       s.add_dependency(%q<fakeweb>, [">= 0"])
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<mocha>, [">= 0"])
@@ -58,6 +62,8 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<shoulda>, [">= 0"])
     end
   else
+    s.add_dependency(%q<actionpack>, ["= 2.3.11"])
+    s.add_dependency(%q<json>, [">= 0"])
     s.add_dependency(%q<fakeweb>, [">= 0"])
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<mocha>, [">= 0"])

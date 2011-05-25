@@ -7,7 +7,7 @@ class TestTripwire < Test::Unit::TestCase
     fake.request = OpenStruct.new(
       :user_agent => 'FooFox',
       :cookies => {'one' => 'two', 'three' => 'four'},
-      :session => {'something' => 'ok', 'some_class' => String, 'some_number' => 42}
+      :session => {'something' => 'ok', 'some_class' => String, 'some_number' => 42, :some_array => [Date, 24]}
     )
     fake
   end
@@ -155,7 +155,7 @@ class TestTripwire < Test::Unit::TestCase
   end
 
   should "log session" do
-    expected = {'something'=>'ok', 'some_class'=>'String', 'some_number'=>'42'}
+    expected = {'something'=>'ok', 'some_class'=>'String', 'some_number'=>'42', 'some_array'=>['Date', '24']}
     assert_equal expected, JSON.parse(fake_controller(BarController).send(:tripwire_params)[:data])['session']
   end
 end

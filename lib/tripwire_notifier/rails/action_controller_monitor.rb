@@ -108,8 +108,15 @@ module TripwireNotifier
         end
       end
 
-      def stringify_values(hash)
-        Hash[hash.map { |k,v| [k, v.to_s] }] unless hash.nil?
+      def stringify_values(values)
+        case values
+        when Array
+          values.map { |v| stringify_values(v) }
+        when Hash
+          Hash[values.map { |k,v| [k, stringify_values(v)] }]
+        else
+          values.to_s
+        end
       end
     end
   end

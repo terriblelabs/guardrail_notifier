@@ -7,7 +7,7 @@ class TestTripwire < Test::Unit::TestCase
     fake.request = OpenStruct.new(
       :user_agent => 'FooFox',
       :cookies => {'one' => 'two', 'three' => 'four'},
-      :session => {'something' => 'ok'}
+      :session => {'something' => 'ok', 'some_class' => String, 'some_number' => 42}
     )
     fake
   end
@@ -147,10 +147,15 @@ class TestTripwire < Test::Unit::TestCase
     assert_kind_of StandardError, list.first
   end
 
-  [:cookies, :session, :user_agent].each do |kind|
+  [:cookies, :user_agent].each do |kind|
     should "log #{kind}" do
       assert @foo_controller.request.send(kind).present?
       assert_equal @foo_controller.request.send(kind), JSON.parse(fake_controller(BarController).send(:tripwire_params)[:data])[kind.to_s]
     end
+  end
+
+  should "log session" do
+    expected = {'something'=>'ok', 'some_class'=>'String', 'some_number'=>'42'}
+    assert_equal expected, JSON.parse(fake_controller(BarController).send(:tripwire_params)[:data])['session']
   end
 end

@@ -80,8 +80,8 @@ module TripwireNotifier
           end
 
           data[:user_agent] = request.user_agent
-          data[:cookies] = request.cookies
-          data[:session] = request.session
+          data[:cookies] = stringify_values(request.cookies)
+          data[:session] = stringify_values(request.session)
         end
       end
 
@@ -106,6 +106,10 @@ module TripwireNotifier
             params[k] = '[FILTERED]'
           end
         end
+      end
+
+      def stringify_values(hash)
+        Hash[hash.map { |k,v| [k, v.to_s] }] unless hash.nil?
       end
     end
   end

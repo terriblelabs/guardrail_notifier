@@ -9,6 +9,7 @@ class TestTripwire < Test::Unit::TestCase
       :cookies => {'one' => 'two', 'three' => 'four'},
       :session => {'something' => 'ok', 'some_class' => String, 'some_number' => 42, :some_array => [Date, 24]}
     )
+    fake.session = fake.request.session
     fake
   end
 
@@ -90,6 +91,19 @@ class TestTripwire < Test::Unit::TestCase
     params = @foo_controller.send(:tripwire_params)
     failures = JSON.parse(params[:failures])
     assert_same_elements expected, failures
+  end
+
+  should "log flash messages" do
+    ignored = "Something ignored"
+    expected = "Something expected"
+
+    @foo_controller.session['flash'] = {'error' => expected, 'notice' => ignored}
+
+    params = @foo_controller.send(:tripwire_params)
+    failures = JSON.parse(params[:failures])
+
+    assert failures.include?({'model' => 'flash', 'field' => 'error', 'message' => expected})
+    assert !failures.include?({'model' => 'flash', 'field' => 'notice', 'message' => ignored})
   end
 
   # should "submit errors via log_validation_failures_to_tripwire" do

@@ -10,7 +10,7 @@ module TripwireNotifier
       protected
 
       def log_validation_failures_to_tripwire
-        if should_log_failures_to_tripwire? && records_with_errors.present?
+        if should_log_failures_to_tripwire? && (records_with_errors.present? || flash_errors.present?)
           TripwireNotifier.notify(tripwire_params)
         end
       rescue Exception => e
@@ -48,9 +48,21 @@ module TripwireNotifier
           query[:path]         = request.path
           query[:data]         = request_data.to_json
 
-          query[:failures] = records_with_errors.map do |record|
+          query[:failures] = (flash_errors + records_with_errors.map do |record|
             error_hashes(record)
-          end.flatten.to_json
+          end).flatten.compact.to_json
+        end
+      end
+
+      def flash_errors
+        @flash_errors ||= begin
+          return [] unless session['flash']
+
+          TripwireNotifier.configuration.monitored_flash_keys.inject([]) do |errors, key|
+            if error = session['flash'][key]
+              errors << error_hash('flash', 'error', error)
+            end
+          end
         end
       end
 

@@ -19,6 +19,10 @@ module TripwireNotifier
     #   config.on_exception = proc { |e| notify_hoptoad(e) }
     attr_accessor :on_exception
 
+    # The set of string keys for flash messages you want to monitor (defaults to
+    # ['error']).
+    attr_accessor :monitored_flash_keys
+
     # The version of the notifier (defaults to the version of this gem).
     attr_reader :notifier_version
 
@@ -26,6 +30,7 @@ module TripwireNotifier
       @notifier_version = VERSION
       @timeout_in_seconds = 5
       @monitored_environments = ['production']
+      @monitored_flash_keys = ['error']
       @secure = true
       @on_exception = nil
     end

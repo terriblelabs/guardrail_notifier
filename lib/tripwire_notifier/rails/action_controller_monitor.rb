@@ -54,14 +54,26 @@ module TripwireNotifier
         end
       end
 
+      def flash_key_monitored?(key)
+        TripwireNotifier.configuration.monitored_flash_keys.any? do |monitored_key|
+          if monitored_key.is_a? Regexp
+            monitored_key =~ key
+          else
+            monitored_key.to_s == key
+          end
+        end
+      end
+
+      def monitored_flashes
+        session['flash'].select { |k,v| flash_key_monitored?(k) }
+      end
+
       def flash_errors
         @flash_errors ||= begin
-          return [] unless session['flash']
+          return [] if session['flash'].nil?
 
-          TripwireNotifier.configuration.monitored_flash_keys.inject([]) do |errors, key|
-            if error = session['flash'][key]
-              errors << error_hash('flash', 'error', error)
-            end
+          monitored_flashes.map do |key, message|
+            error_hash('flash', key, message)
           end
         end
       end

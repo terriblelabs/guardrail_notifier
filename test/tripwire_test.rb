@@ -106,6 +106,22 @@ class TestTripwire < Test::Unit::TestCase
     assert !failures.include?({'model' => 'flash', 'field' => 'notice', 'message' => ignored})
   end
 
+  should "log flash messages matching specified key regex" do
+    # add a regex to match any key containing 'error'
+    TripwireNotifier.configure { |c| c.monitored_flash_keys << /error/ }
+
+    ignored = "Something ignored"
+    expected = "Something expected"
+    @foo_controller.session['flash'] = {'error' => expected, 'another_error' => expected, 'notice' => ignored}
+
+    params = @foo_controller.send(:tripwire_params)
+    failures = JSON.parse(params[:failures])
+
+    assert failures.include?({'model' => 'flash', 'field' => 'error', 'message' => expected})
+    assert failures.include?({'model' => 'flash', 'field' => 'another_error', 'message' => expected})
+    assert !failures.include?({'model' => 'flash', 'field' => 'notice', 'message' => ignored})
+  end
+
   # should "submit errors via log_validation_failures_to_tripwire" do
   #   Net::HTTP.expects(:post_form).with(URI.parse("http://api.tripwireapp.com:80"), @foo_controller.send(:tripwire_params))
   #   @foo_controller.send(:log_validation_failures_to_tripwire)

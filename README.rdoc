@@ -39,6 +39,8 @@ In your Rails app, create config/initializers/tripwire_notifier.rb and add the f
       config.api_key = "<YOUR API KEY>"
     end
 
+Or, if you prefer to keep API keys and the like out of your code, set the TRIPWIRE_API_KEY environment variable and TripwireNotifier will find it automatically.
+
 Validation errors will now be submitted to the Tripwire service on your create and update actions in production mode.
 
 = Advanced Usage

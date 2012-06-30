@@ -94,5 +94,5 @@ Per Rails convention, those params will show up as "[FILTERED]" in the data subm
 
 == Copyright
 
-Copyright (c) 2010 Jeffrey Chupp and Jeremy Weiskotten. See LICENSE for details.
+Copyright (c) 2010 Terrible Labs, Inc. See LICENSE for details.
 

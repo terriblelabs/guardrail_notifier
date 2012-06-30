@@ -8,5 +8,6 @@ group :development do
   gem "mocha"
   gem "redgreen"
   gem "rake",  ">= 0.8.7"
+  gem "jeweler"
 end
 

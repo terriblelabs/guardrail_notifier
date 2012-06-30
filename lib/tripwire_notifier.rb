@@ -10,16 +10,16 @@ module TripwireNotifier
   API_VERSION = "alpha 1"
 
   class << self
-    attr_accessor :configuration
-    attr_accessor :sender
-
     def configuration
       @configuration ||= Configuration.new
     end
 
     def configure
       yield(self.configuration)
-      self.sender = Sender.new(self.configuration)
+    end
+
+    def sender
+      @sender ||= Sender.new(self.configuration)
     end
 
     def notify(data)

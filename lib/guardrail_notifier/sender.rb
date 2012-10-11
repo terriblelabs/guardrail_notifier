@@ -1,4 +1,4 @@
-module TripwireNotifier
+module GuardrailNotifier
   class Sender
     attr_reader :configuration
 
@@ -15,14 +15,14 @@ module TripwireNotifier
     end
 
     def host
-      'api.tripwireapp.com'
+      'api.guardrailapp.com'
     end
 
     def uri
       URI.parse("#{protocol}://#{host}:#{port}").merge('/')
     end
 
-    def send_to_tripwire(data)
+    def send_to_guardrail(data)
       uri = self.uri
 
       http = Net::HTTP.new(uri.host, uri.port)
@@ -36,7 +36,7 @@ module TripwireNotifier
       begin
         response = http.request(request)
       rescue Exception => ex
-        warn "Could not submit tripwireapp notification: #{ex.class} - #{ex.message}"
+        warn "Could not submit guardrailapp notification: #{ex.class} - #{ex.message}"
       end
     end
   end

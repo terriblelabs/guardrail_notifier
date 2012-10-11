@@ -1,6 +1,6 @@
 require 'helper'
 
-class TestTripwire < Test::Unit::TestCase
+class TestGuardrail < Test::Unit::TestCase
   def fake_controller(klass)
     fake = klass.new
     fake.params = {'action' => "foo", 'controller' => "bar"}
@@ -17,9 +17,9 @@ class TestTripwire < Test::Unit::TestCase
 
     @foo_controller = fake_controller(FooController)
 
-    FakeWeb.register_uri(:post, 'http://api.tripwireapp.com', :body => "")
+    FakeWeb.register_uri(:post, 'http://api.guardrailapp.com', :body => "")
 
-    TripwireNotifier.configure do |config|
+    GuardrailNotifier.configure do |config|
       config.api_key = "SOME API KEY"
       config.monitored_environments = ['production']
     end
@@ -36,38 +36,38 @@ class TestTripwire < Test::Unit::TestCase
   end
 
   should "set an api key" do
-    TripwireNotifier.configure { |c| c.api_key = "Foo" }
-    assert_equal "Foo", TripwireNotifier.configuration.api_key
+    GuardrailNotifier.configure { |c| c.api_key = "Foo" }
+    assert_equal "Foo", GuardrailNotifier.configuration.api_key
   end
 
   should "fallback to the ENV api key" do
-    TripwireNotifier.configure { |c| c.api_key = nil }
-    ENV['TRIPWIRE_API_KEY'] = 'Cupcakes'
-    assert_equal "Cupcakes", TripwireNotifier.notifier_params[:api_key]
+    GuardrailNotifier.configure { |c| c.api_key = nil }
+    ENV['GUARDRAIL_API_KEY'] = 'Cupcakes'
+    assert_equal "Cupcakes", GuardrailNotifier.notifier_params[:api_key]
   end
 
   should "set secure" do
-    TripwireNotifier.configure { |c| c.secure = true }
-    assert TripwireNotifier.configuration.secure?
+    GuardrailNotifier.configure { |c| c.secure = true }
+    assert GuardrailNotifier.configuration.secure?
   end
 
   should "set a timeout_in_seconds" do
-    assert_equal 5, TripwireNotifier.configuration.timeout_in_seconds
-    TripwireNotifier.configure { |c| c.timeout_in_seconds = 6 }
-    assert_equal 6, TripwireNotifier.configuration.timeout_in_seconds
+    assert_equal 5, GuardrailNotifier.configuration.timeout_in_seconds
+    GuardrailNotifier.configure { |c| c.timeout_in_seconds = 6 }
+    assert_equal 6, GuardrailNotifier.configuration.timeout_in_seconds
   end
 
   should "set monitored environments" do
-    assert_equal ["production"], TripwireNotifier.configuration.monitored_environments
-    TripwireNotifier.configure { |c| c.monitored_environments = ['stage', 'development'] }
-    assert_equal ['stage', 'development'], TripwireNotifier.configuration.monitored_environments
+    assert_equal ["production"], GuardrailNotifier.configuration.monitored_environments
+    GuardrailNotifier.configure { |c| c.monitored_environments = ['stage', 'development'] }
+    assert_equal ['stage', 'development'], GuardrailNotifier.configuration.monitored_environments
   end
 
   should "respect monitored environments" do
-    assert @foo_controller.send(:should_log_failures_to_tripwire?)
+    assert @foo_controller.send(:should_log_failures_to_guardrail?)
 
-    TripwireNotifier.configuration.monitored_environments = ['stage', 'development']
-    assert !@foo_controller.send(:should_log_failures_to_tripwire?)
+    GuardrailNotifier.configuration.monitored_environments = ['stage', 'development']
+    assert !@foo_controller.send(:should_log_failures_to_guardrail?)
   end
 
   should "identify no errors by default" do
@@ -78,7 +78,7 @@ class TestTripwire < Test::Unit::TestCase
     assert_same_elements [@model_one, @model_two, @model_three], @foo_controller.send(:records_with_errors)
   end
 
-  should "create params via tripwire_params" do
+  should "create params via guardrail_params" do
     expected = [
       {"model"=>"OpenStruct", "field"=>"baz", "message"=>"is blank"},
       {"model"=>"OpenStruct", "field"=>"f1", "message"=>"is blank"},
@@ -87,29 +87,24 @@ class TestTripwire < Test::Unit::TestCase
       {"model"=>"OpenStruct", "field"=>"bar", "message"=>"is blank"}
     ]
 
-    params = @foo_controller.send(:tripwire_params)
+    params = @foo_controller.send(:guardrail_params)
     failures = JSON.parse(params[:failures])
     assert_same_elements expected, failures
   end
 
-  # should "submit errors via log_validation_failures_to_tripwire" do
-  #   Net::HTTP.expects(:post_form).with(URI.parse("http://api.tripwireapp.com:80"), @foo_controller.send(:tripwire_params))
-  #   @foo_controller.send(:log_validation_failures_to_tripwire)
+  # should "submit errors via log_validation_failures_to_guardrail" do
+  #   Net::HTTP.expects(:post_form).with(URI.parse("http://api.guardrailapp.com:80"), @foo_controller.send(:guardrail_params))
+  #   @foo_controller.send(:log_validation_failures_to_guardrail)
   # end
 
   should "log controller and action" do
-    assert_equal @foo_controller.params['action'], @foo_controller.send(:tripwire_params)[:_action]
-    assert_equal @foo_controller.params['controller'], @foo_controller.send(:tripwire_params)[:_controller]
+    assert_equal @foo_controller.params['action'], @foo_controller.send(:guardrail_params)[:_action]
+    assert_equal @foo_controller.params['controller'], @foo_controller.send(:guardrail_params)[:_controller]
   end
 
   should "log params" do
     @foo_controller.params.merge!('lolcats' => "no longer funny")
-    assert_equal @foo_controller.params, JSON.parse(@foo_controller.send(:tripwire_params)[:data])['params']
-  end
-
-  should "filter params" do
-    @foo_controller.params.merge!('password' => "do not show", 'password_confirmation' => 'rollerskates')
-    assert_equal @foo_controller.params.merge('password' => "[FILTERED]", 'password_confirmation' => '[FILTERED]'), JSON.parse(@foo_controller.send(:tripwire_params)[:data])['params']
+    assert_equal @foo_controller.params, JSON.parse(@foo_controller.send(:guardrail_params)[:data])['params']
   end
 
   should "filter tempfiles" do
@@ -118,14 +113,14 @@ class TestTripwire < Test::Unit::TestCase
       tempfile.rewind
 
       @foo_controller.params.merge!('value' => 'abc', 'photo' => tempfile, 'nested' => { 'nested_value' => 1, 'nested_photo' => tempfile })
-      params = JSON.parse(@foo_controller.send(:tripwire_params)[:data])['params']
+      params = JSON.parse(@foo_controller.send(:guardrail_params)[:data])['params']
       assert_equal @foo_controller.params.merge('value' => 'abc', 'photo' => '[FILTERED]', 'nested' => { 'nested_value' => 1, 'nested_photo' => '[FILTERED]' }), params
     end
   end
 
   should "log current user's id if the method is exposed" do
-    assert_equal nil, JSON.parse(@foo_controller.send(:tripwire_params)[:data])['current_user']
-    assert_equal 53077, JSON.parse(fake_controller(BarController).send(:tripwire_params)[:data])['current_user']
+    assert_equal nil, JSON.parse(@foo_controller.send(:guardrail_params)[:data])['current_user']
+    assert_equal 53077, JSON.parse(fake_controller(BarController).send(:guardrail_params)[:data])['current_user']
   end
 
   should "handle exceptions" do
@@ -133,15 +128,15 @@ class TestTripwire < Test::Unit::TestCase
     logger.expects(:error)
     Rails.stubs(:logger => logger)
 
-    @foo_controller.stubs(:tripwire_params).raises(StandardError)
-    @foo_controller.send(:log_validation_failures_to_tripwire)
+    @foo_controller.stubs(:guardrail_params).raises(StandardError)
+    @foo_controller.send(:log_validation_failures_to_guardrail)
 
     # with a custom exception handler
     list = []
-    TripwireNotifier.configure { |c| c.on_exception = proc { |e| list << e } }
+    GuardrailNotifier.configure { |c| c.on_exception = proc { |e| list << e } }
 
     logger.expects(:error)
-    @foo_controller.send(:log_validation_failures_to_tripwire)
+    @foo_controller.send(:log_validation_failures_to_guardrail)
 
     assert_equal 1, list.size
     assert_kind_of StandardError, list.first
@@ -150,12 +145,12 @@ class TestTripwire < Test::Unit::TestCase
   [:cookies, :user_agent].each do |kind|
     should "log #{kind}" do
       assert @foo_controller.request.send(kind).present?
-      assert_equal @foo_controller.request.send(kind), JSON.parse(fake_controller(BarController).send(:tripwire_params)[:data])[kind.to_s]
+      assert_equal @foo_controller.request.send(kind), JSON.parse(fake_controller(BarController).send(:guardrail_params)[:data])[kind.to_s]
     end
   end
 
   should "log session" do
     expected = {'something'=>'ok', 'some_class'=>'String', 'some_number'=>'42', 'some_array'=>['Date', '24']}
-    assert_equal expected, JSON.parse(fake_controller(BarController).send(:tripwire_params)[:data])['session']
+    assert_equal expected, JSON.parse(fake_controller(BarController).send(:guardrail_params)[:data])['session']
   end
 end

@@ -2,22 +2,22 @@ require 'helper'
 
 class SenderTest < Test::Unit::TestCase
   def setup
-    TripwireNotifier.configure do |c|
+    GuardrailNotifier.configure do |c|
       c.api_key = 'API_KEY'
     end
-    @sender = TripwireNotifier::Sender.new(TripwireNotifier.configuration)
+    @sender = GuardrailNotifier::Sender.new(GuardrailNotifier.configuration)
   end
 
   context "initialize" do
     should "set configuration" do
-      assert_same TripwireNotifier.configuration, @sender.configuration
+      assert_same GuardrailNotifier.configuration, @sender.configuration
       assert_equal 'API_KEY', @sender.configuration.api_key
     end
   end
 
   context "when not configured to be secure" do
     setup do
-      TripwireNotifier.configuration.secure = false
+      GuardrailNotifier.configuration.secure = false
     end
 
     should "return 'http' for #protocol" do
@@ -29,13 +29,13 @@ class SenderTest < Test::Unit::TestCase
     end
 
     should "post data without ssl on insecure port" do
-      assert_sends_to_tripwire(false, 80)
+      assert_sends_to_guardrail(false, 80)
     end
   end
 
   context "when configured to be secure" do
     setup do
-      TripwireNotifier.configuration.secure = true
+      GuardrailNotifier.configuration.secure = true
     end
 
     should "return 'https' for protocol" do
@@ -47,16 +47,16 @@ class SenderTest < Test::Unit::TestCase
     end
 
     should "post data with ssl on secure port" do
-      assert_sends_to_tripwire(true, 443)
+      assert_sends_to_guardrail(true, 443)
     end
   end
 
-  should "return api.tripwireapp.com for #host" do
-    assert_equal 'api.tripwireapp.com', @sender.host
+  should "return api.guardrailapp.com for #host" do
+    assert_equal 'api.guardrailapp.com', @sender.host
   end
 
 
-  def assert_sends_to_tripwire(use_ssl, port)
+  def assert_sends_to_guardrail(use_ssl, port)
     data = {:key => :value}
 
     mock_request = mock()
@@ -70,6 +70,6 @@ class SenderTest < Test::Unit::TestCase
     mock_http.expects(:request).with(mock_request)
     Net::HTTP.stubs(:new => mock_http)
 
-    @sender.send_to_tripwire(data)
+    @sender.send_to_guardrail(data)
   end
 end

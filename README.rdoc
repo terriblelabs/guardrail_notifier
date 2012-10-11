@@ -1,12 +1,12 @@
-= TripwireNotifier
+= GuardrailNotifier
 
-http://travis-ci.org/jeremyw/tripwire_notifier.png
+http://travis-ci.org/terriblelabs/guardrail_notifier.png
 
 Stop hurting your users!
 
-Tripwire captures validation errors from your Ruby on Rails application to help you identify and fix user experience issues. The TripwireNotifier gem makes it easy to hook up your app to the Tripwire web service.
+Guardrail captures validation errors from your Ruby on Rails application to help you identify and fix user experience issues. The GuardrailNotifier gem makes it easy to hook up your app to the Guardrail web service.
 
-If you haven't already signed up for a Tripwire account, visit http://tripwireapp.com.
+If you haven't already signed up for a Guardrail account, visit http://guardrailapp.com.
 
 
 = Installation
@@ -15,7 +15,7 @@ If you haven't already signed up for a Tripwire account, visit http://tripwireap
 
 * Add the following line to Gemfile:
 
-    gem 'tripwire_notifier'
+    gem 'guardrail_notifier'
 
 * Install the gem:
 
@@ -25,61 +25,61 @@ If you haven't already signed up for a Tripwire account, visit http://tripwireap
 
 * Add the following line to config/environment.rb:
 
-    config.gem 'tripwire_notifier'
+    config.gem 'guardrail_notifier'
 
 * Install the gem:
 
-    [sudo] rake gems:install GEM=tripwire_notifier
+    [sudo] rake gems:install GEM=guardrail_notifier
 
 = Configuration
 
-In your Rails app, create config/initializers/tripwire_notifier.rb and add the following line with the API key for your Tripwire project:
+In your Rails app, create config/initializers/guardrail_notifier.rb and add the following line with the API key for your Guardrail project:
 
-    TripwireNotifier.configure do |config|
+    GuardrailNotifier.configure do |config|
       config.api_key = "<YOUR API KEY>"
     end
 
-Or, if you prefer to keep API keys and the like out of your code, set the TRIPWIRE_API_KEY environment variable and TripwireNotifier will find it automatically.
+Or, if you prefer to keep API keys and the like out of your code, set the GUARDRAIL_API_KEY environment variable and GuardrailNotifier will find it automatically.
 
-Validation errors will now be submitted to the Tripwire service on your create and update actions in production mode.
+Validation errors will now be submitted to the Guardrail service on your create and update actions in production mode.
 
 = Advanced Usage
 
 === Tracking custom actions
 
-TripwireNotifier assumes your app is RESTful, so it only monitors the create and update actions by default. If you're creating or updating records in non-RESTful actions, you can use an after_filter to make sure any validation failures in those actions are caught as well:
+GuardrailNotifier assumes your app is RESTful, so it only monitors the create and update actions by default. If you're creating or updating records in non-RESTful actions, you can use an after_filter to make sure any validation failures in those actions are caught as well:
 
-    after_filter :log_validation_failures_to_tripwire, :only => [:create, :update, :my_custom_action]
+    after_filter :log_validation_failures_to_guardrail, :only => [:create, :update, :my_custom_action]
 
 === Running in other environments
 
-TripwireNotifier is only enabled in the production environment by default. If you want to enable it in additional environments, such as staging, you'll need to add the following line to your Tripwire initializer:
+GuardrailNotifier is only enabled in the production environment by default. If you want to enable it in additional environments, such as staging, you'll need to add the following line to your Guardrail initializer:
 
-    TripwireNotifier.configure do |config|
+    GuardrailNotifier.configure do |config|
       config.monitored_environments << 'staging'
     end
 
 === SSL
 
-TripwireNotifier uses a secure connection over SSL by default, but you can easily disable it if you prefer:
+GuardrailNotifier uses a secure connection over SSL by default, but you can easily disable it if you prefer:
 
-    TripwireNotifier.configure do |config|
+    GuardrailNotifier.configure do |config|
       config.secure = false
     end
 
 === Filtering params
 
-TripwireNotifier records the parameters submitted in actions that cause validation errors. Because your app may handle sensitive data, like passwords, credit card numbers, and nuclear launch codes, TripwireNotifier respects the parameter filtering that you configure in Rails in config/application.rb (Rails 3) or ApplicationController (Rails 2.3). For example in Rails 3:
+GuardrailNotifier records the parameters submitted in actions that cause validation errors. Because your app may handle sensitive data, like passwords, credit card numbers, and nuclear launch codes, GuardrailNotifier respects the parameter filtering that you configure in Rails in config/application.rb (Rails 3) or ApplicationController (Rails 2.3). For example in Rails 3:
 
     config.filter_parameters += [:password, :secret, :cvv]
 
-Per Rails convention, those params will show up as "[FILTERED]" in the data submitted to Tripwire.
+Per Rails convention, those params will show up as "[FILTERED]" in the data submitted to Guardrail.
 
 
 == Contact information
 
-* Twitter: @tripwireapp
-* Email: jeremy@tripwireapp.com, jeff@tripwireapp.com
+* Twitter: @guardrailapp
+* Email: jeremy@guardrailapp.com, jeff@guardrailapp.com
 
 
 == Note on Patches/Pull Requests

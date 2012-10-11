@@ -1,9 +1,8 @@
 require 'rubygems'
-require 'redgreen'
 require 'test/unit'
 require 'ostruct'
 require 'shoulda'
-gem 'actionpack', '~>2.3'
+gem 'actionpack', '~>3.2'
 require 'action_controller'
 require 'fakeweb'
 require 'mocha'
@@ -11,13 +10,12 @@ require 'tempfile'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
-require 'tripwire_notifier'
+require 'guardrail_notifier'
 
 class Test::Unit::TestCase
 end
 
 class FooController < ActionController::Base
-  filter_parameter_logging :password
 end
 
 class User

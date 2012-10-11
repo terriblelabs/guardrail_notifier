@@ -1,27 +1,27 @@
-module TripwireNotifier
+module GuardrailNotifier
   module Rails
     # This module is mixed into ActionController::Base.
     module ActionControllerMonitor
 
       def self.included(base)
-        base.after_filter :log_validation_failures_to_tripwire, :only => [:create, :update]
+        base.after_filter :log_validation_failures_to_guardrail, :only => [:create, :update]
       end
 
       protected
 
-      def log_validation_failures_to_tripwire
-        if should_log_failures_to_tripwire? && records_with_errors.present?
-          TripwireNotifier.notify(tripwire_params)
+      def log_validation_failures_to_guardrail
+        if should_log_failures_to_guardrail? && records_with_errors.present?
+          GuardrailNotifier.notify(guardrail_params)
         end
       rescue Exception => e
-        ::Rails.logger.error("Failed to log validation failure to Tripwire")
+        ::Rails.logger.error("Failed to log validation failure to Guardrail")
 
-        handler = TripwireNotifier.configuration.on_exception
+        handler = GuardrailNotifier.configuration.on_exception
         handler.call(e) if !handler.nil? && handler.respond_to?(:call)
       end
 
-      def should_log_failures_to_tripwire?
-        TripwireNotifier.configuration.monitored_environments.include?(::Rails.env.to_s)
+      def should_log_failures_to_guardrail?
+        GuardrailNotifier.configuration.monitored_environments.include?(::Rails.env.to_s)
       end
 
       def records_with_errors
@@ -41,7 +41,7 @@ module TripwireNotifier
         record.respond_to?(:errors) && record.errors.present?
       end
 
-      def tripwire_params
+      def guardrail_params
         {}.tap do |query|
           query[:_controller]  = params['controller']
           query[:_action]      = params['action']
@@ -122,4 +122,4 @@ module TripwireNotifier
   end
 end
 
-ActionController::Base.send(:include, TripwireNotifier::Rails::ActionControllerMonitor)
+ActionController::Base.send(:include, GuardrailNotifier::Rails::ActionControllerMonitor)

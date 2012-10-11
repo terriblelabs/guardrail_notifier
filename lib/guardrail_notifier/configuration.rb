@@ -1,4 +1,4 @@
-module TripwireNotifier
+module GuardrailNotifier
   class Configuration
     attr_accessor :api_key
 
@@ -6,7 +6,7 @@ module TripwireNotifier
     # only the production environment).
     attr_accessor :monitored_environments
 
-    # Number of seconds after which submission to Tripwire should timeout (defaults to 5).
+    # Number of seconds after which submission to Guardrail should timeout (defaults to 5).
     attr_accessor :timeout_in_seconds
 
     # +true+ for https connections, +false+ for http connections.
@@ -14,7 +14,7 @@ module TripwireNotifier
     alias_method :secure?, :secure
 
     # A +call+able object, such as a Proc, to be invoked if an exception occurs when
-    # logging to Tripwire (defaults to nil). For example, to notify Hoptoad:
+    # logging to Guardrail (defaults to nil). For example, to notify Hoptoad:
     #
     #   config.on_exception = proc { |e| notify_hoptoad(e) }
     attr_accessor :on_exception

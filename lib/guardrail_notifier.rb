@@ -1,12 +1,12 @@
 require 'net/http'
 require 'net/https'
 require 'uri'
-require 'tripwire_notifier/version'
-require 'tripwire_notifier/configuration'
-require 'tripwire_notifier/sender'
-require 'tripwire_notifier/rails/action_controller_monitor'
+require 'guardrail_notifier/version'
+require 'guardrail_notifier/configuration'
+require 'guardrail_notifier/sender'
+require 'guardrail_notifier/rails/action_controller_monitor'
 
-module TripwireNotifier
+module GuardrailNotifier
   API_VERSION = "alpha 1"
 
   class << self
@@ -23,13 +23,13 @@ module TripwireNotifier
     end
 
     def notify(data)
-      self.sender.send_to_tripwire(data.merge(notifier_params))
+      self.sender.send_to_guardrail(data.merge(notifier_params))
     end
 
     def notifier_params
       @notifier_params ||= {
         :notifier_version => self.configuration.notifier_version,
-        :api_key          => self.configuration.api_key || ENV['TRIPWIRE_API_KEY'],
+        :api_key          => self.configuration.api_key || ENV['GUARDRAIL_API_KEY'],
         :api_version      => API_VERSION
       }
     end

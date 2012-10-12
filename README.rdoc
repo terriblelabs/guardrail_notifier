@@ -1,6 +1,6 @@
 = GuardrailNotifier
 
-http://travis-ci.org/terriblelabs/guardrail_notifier.png
+{<img src="https://travis-ci.org/terriblelabs/guardrail_notifier.png" />}[https://travis-ci.org/terriblelabs/guardrail_notifier]
 
 Stop hurting your users!
 

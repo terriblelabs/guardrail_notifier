@@ -79,7 +79,7 @@ Per Rails convention, those params will show up as "[FILTERED]" in the data subm
 == Contact information
 
 * Twitter: @guardrailapp
-* Email: jeremy@guardrailapp.com, jeff@guardrailapp.com
+* Email: support@guardrailapp.com
 
 
 == Note on Patches/Pull Requests
@@ -94,5 +94,5 @@ Per Rails convention, those params will show up as "[FILTERED]" in the data subm
 
 == Copyright
 
-Copyright (c) 2010 Terrible Labs, Inc. See LICENSE for details.
+Copyright (c) 2012 Terrible Labs, Inc. See LICENSE for details.
 

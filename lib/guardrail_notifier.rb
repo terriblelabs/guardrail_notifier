@@ -29,7 +29,7 @@ module GuardrailNotifier
     def notifier_params
       @notifier_params ||= {
         :notifier_version => self.configuration.notifier_version,
-        :api_key          => self.configuration.api_key || ENV['GUARDRAIL_API_KEY'],
+        :api_key          => self.configuration.api_key || ENV['GUARDRAIL_API_KEY'] || ENV['TRIPWIRE_API_KEY'],
         :api_version      => API_VERSION
       }
     end
